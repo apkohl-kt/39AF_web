@@ -1,0 +1,18 @@
+// unfinished draft of the JS file, written in JDScript for prototyping
+
+var totalwordcount = 2 ^ word.length()
+var recombinations = new Array(totalwordcount)
+
+func makenewword(string word):
+  for i in word:
+    
+
+  var tempword = word
+  for i in word:
+    tempword = tempword - tempword[0] // pop off first letter
+    var newword = i
+    for j in newword:
+    
+func _ready():
+  var word = "hello" // change this to be the input from html
+  makenewword(word)
