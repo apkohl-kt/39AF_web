@@ -1,15 +1,33 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>CS 39AF Single Web App</title>
-    <!-- Replace the content in the following line with your name. -->
-    <meta name="author" content="Adam">
-  </head>
-  <body>
-    <!-- Replace the lines in this body with your content. -->
-    <h1>39AF - Single Web App</h1>
-    <img src="logo.png">
-    <p>Hello world!</p>
-    <p>Hello?</p>
-    <p><a href="secondpage.html">More</a></p>
-  </body>
+
+
+<head>
+     <title>Word Recombiner</title>
+     <meta name="author" content="Adam">
+</head>
+
+
+<body>
+  <h1>Word Recombiner</h1>
+  
+  <form action="/index.html">
+    <label for="textbody">Text Body: </label>
+    <input type = "text" id = "textbody"> <br><br>
+
+    <input type = "submit" value="Submit">
+
+    <label for = "output">Output: </label>
+    <input type = "textbox" name = "output"></input>
+
+    <!-- in js: 
+      perform calculation
+
+      document.getElementByName('output')[0].value = var^
+    -->
+  </form>
+
+</body>
+
+
 </html>
