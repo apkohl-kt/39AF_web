@@ -1,3 +1,22 @@
+Website: https://apkohl-kt.github.io/39AF_web/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OLD README:
+
+
+
 This is a template for a CS1030 web page project.
 
 1. Make your own copy of this repository:
