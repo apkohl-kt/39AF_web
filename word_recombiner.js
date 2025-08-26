@@ -9,7 +9,7 @@ function factorial(n) {
     return res;
 }
 
-document.getElementById("output").innerHTML = wordpermutations;
+document.getElementById("output").value = wordpermutations;
 
 
 
