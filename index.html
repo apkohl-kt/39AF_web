@@ -11,25 +11,23 @@
       		font-size: 20px;
       		color: #302866; 
     		background-color:#F1F0FC;       
+    		text-align: center;
     	}
         h1 { text-align: center; }
         form { text-align: center; }
         footer { text-align: center; }
-		body { text-align: center; }
 	</style>
 </head>
-
 
 <body>
 	<h1>Word Recombiner</h1>
  	<hr>
-  	<form id="form1" action="/index.html">
+  	<form id="form1">
     	<label for="textbody">Text Body: </label> <br>
-    	<input type = "text" id = "textbody"> <br>
-    	<input type = "submit" value="Submit"> <br><br>
-    	<label for = "output">Output: </label> <br>
-    	<!--<input type = "textbox" name = "output"></input>-->
-    	<textarea id = "output" name = "output" rows = 2 cols = 50></textarea>
+    	<input type="text" id="textbody"> <br>
+    	<input type="submit" value="Submit"> <br><br>
+    	<label for="output">Output: </label> <br>
+    	<textarea id="output" name="output" rows="2" cols="50" readonly></textarea>
 	</form>
 
 	<br><br>
@@ -37,9 +35,22 @@
 	
     <br><br><br><br><br><br>
 
-	<script src="word_recombiner.js"></script>
-</body>
+	<script>
+		function factorial(n) {
+			let res = 1;
+			for (let i = 1; i <= n; i++) { res *= i; }
+			return res;
+		}
 
+		document.getElementById("form1").addEventListener("submit", function(event) {
+			event.preventDefault();		// prevent reload
+			let word = document.getElementById("textbody").value.trim();
+			let wordLength = word.length;
+			let wordPermutations = factorial(wordLength);
+			document.getElementById("output").value = wordPermutations;
+		});
+	</script>
+</body>
 
 <footer>
 	<a href="https://github.com/apkohl-kt/39AF_web">Repository</a>
