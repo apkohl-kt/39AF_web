@@ -12,7 +12,9 @@
 # Known issues or limitations
 - No data persistence
 - No way to get data onto the page without manually entering it
+- The first entry in the list cannot be removed. 
 
 # Future enhancement ideas
 - File uploading. Allow the site to accept any of its four export formats to build a list. This could also add the imported list items onto any existing entries.
-- Reordering the list. The list currently only sorts by entry order. A custom ordering number field, or a drag handle could be used. 
+- Reordering the list. The list currently only sorts by entry order. A custom ordering number field, or a drag handle could be used.
+- Compact view. The SPA only has one mode – editing. This can get cluttered quickly with larger lists, so a view mode could be added to make it easier to see the list without constant scrolling.
