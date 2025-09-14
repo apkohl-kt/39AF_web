@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foreign Shopping Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-weight: 300;
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        .export-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .export-dropdown-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-dropdown-btn:hover {
+            background-color: #218838;
+        }
+
+        .export-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #2a2a2a;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+            border-radius: 6px;
+            z-index: 1;
+            border: 1px solid #3a3a3a;
+        }
+
+        .export-dropdown-content button {
+            background-color: transparent;
+            color: #e0e0e0;
+            padding: 12px 16px;
+            border: none;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.2s ease;
+            font-size: 14px;
+        }
+
+        .export-dropdown-content button:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+
+        .export-dropdown-content button:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+
+        .export-dropdown-content button:hover {
+            background-color: #3a3a3a;
+        }
+
+        .export-dropdown.show .export-dropdown-content {
+            display: block;
+        }
+
+        .filter-section {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #3a3a3a;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group.flex-1 {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .filter-group.price-range {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .price-inputs input {
+            flex: 1;
+        }
+
+        .price-separator {
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            background-color: #4a9eff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background-color: #3a8eef;
+        }
+
+        .filter-btn.clear {
+            background-color: #6c757d;
+        }
+
+        .filter-btn.clear:hover {
+            background-color: #5a6268;
+        }
+
+        .entry {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #3a3a3a;
+        }
+
+        .entry.hidden {
+            display: none;
+        }
+
+        .field-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field-group.flex-1 {
+            flex: 1;
+        }
+
+        .field-group.flex-2 {
+            flex: 2;
+        }
+
+        label {
+            font-size: 0.9em;
+            color: #b0b0b0;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            background-color: #333;
+            border: 1px solid #555;
+            color: #e0e0e0;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+        }
+
+        input[required], select[required] {
+            border-left: 3px solid #4a9eff;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .add-entry-btn {
+            background-color: #4a9eff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px 0;
+            transition: background-color 0.2s ease;
+        }
+
+        .add-entry-btn:hover {
+            background-color: #3a8eef;
+        }
+
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .remove-btn:hover {
+            background-color: #c82333;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            opacity: 1;
+        }
+
+        .notification.error {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-row">
+            <h1>Foreign Shopping Tracker</h1>
+            
+            <div class="export-dropdown" id="exportDropdown">
+                <button class="export-dropdown-btn" onclick="toggleDropdown()">
+                    📤 Export 
+                    <span id="dropdownArrow">▼</span>
+                </button>
+                <div class="export-dropdown-content">
+                    <button onclick="downloadFile('json')">📄 Export as JSON</button>
+                    <button onclick="downloadFile('csv')">📊 Export as CSV</button>
+                    <button onclick="downloadFile('txt')">💾 Export as TXT</button>
+                    <button onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <div class="filter-row">
+                <div class="filter-group flex-1">
+                    <label for="filter-item-type">Filter by Item Type</label>
+                    <select id="filter-item-type">
+                        <option value="">All Types</option>
+                        <option value="Video Game">Video Game</option>
+                        <option value="Gaming Console">Gaming Console</option>
+                        <option value="Gaming Peripheral">Gaming Peripheral</option>
+                        <option value="Manga">Manga</option>
+                        <option value="Book">Book</option>
+                        <option value="Figure">Figure</option>
+                        <option value="Merchandise">Merchandise</option>
+                        <option value="Souvenir">Souvenir</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group flex-1">
+                    <label for="filter-year">Filter by Year Made</label>
+                    <input type="number" id="filter-year" min="1900" max="2030" placeholder="e.g. 2020">
+                </div>
+                
+                <div class="filter-group price-range">
+                    <label>Filter by USD Price Range</label>
+                    <div class="price-inputs">
+                        <input type="number" id="filter-price-min" placeholder="Min ($)" min="0" step="0.01">
+                        <span class="price-separator">to</span>
+                        <input type="number" id="filter-price-max" placeholder="Max ($)" min="0" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+                    <button class="filter-btn clear" onclick="clearFilters()">Clear Filters</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="entries-container">
+            <!-- Entries will be added here by JavaScript -->
+        </div>
+        
+        <button class="add-entry-btn" onclick="addEntry()">+ Add Another Entry</button>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        let entryCount = 0;
+
+        function createEntry() {
+            entryCount++;
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'entry';
+            entryDiv.id = `entry-${entryCount}`;
+            
+            entryDiv.innerHTML = `
+                <div class="field-row">
+                    <div class="field-group flex-2">
+                        <label for="en-name-${entryCount}">English Name *</label>
+                        <input type="text" id="en-name-${entryCount}" required>
+                    </div>
+                    <div class="field-group flex-2">
+                        <label for="native-name-${entryCount}">Native Name</label>
+                        <input type="text" id="native-name-${entryCount}">
+                    </div>
+                    <div class="field-group flex-2">
+                        <label for="pronunciation-${entryCount}">Pronunciation</label>
+                        <input type="text" id="pronunciation-${entryCount}">
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div class="field-group flex-1">
+                        <label for="item-type-${entryCount}">Item Type *</label>
+                        <select id="item-type-${entryCount}" required>
+                            <option value="">Select type...</option>
+                            <option value="Video Game">Video Game</option>
+                            <option value="Gaming Console">Gaming Console</option>
+                            <option value="Gaming Peripheral">Gaming Peripheral</option>
+                            <option value="Manga">Manga</option>
+                            <option value="Book">Book</option>
+                            <option value="Figure">Figure</option>
+                            <option value="Merchandise">Merchandise</option>
+                            <option value="Souvenir">Souvenir</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="field-group flex-1">
+                        <label for="franchise-${entryCount}">Franchise</label>
+                        <input type="text" id="franchise-${entryCount}">
+                    </div>
+                    <div class="field-group flex-1">
+                        <label for="year-${entryCount}">Year Made</label>
+                        <input type="number" id="year-${entryCount}" min="1900" max="2030">
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div class="field-group flex-1">
+                        <label for="usd-price-${entryCount}">USD Price</label>
+                        <input type="text" id="usd-price-${entryCount}" placeholder="$0.00">
+                    </div>
+                    <div class="field-group flex-1">
+                        <label for="native-price-${entryCount}">Native Currency Price</label>
+                        <input type="text" id="native-price-${entryCount}" placeholder="e.g. 1500 yen">
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div class="field-group flex-1">
+                        <label for="store-type-${entryCount}">Store Type</label>
+                        <input type="text" id="store-type-${entryCount}" placeholder="e.g. Game Store, Book Shop">
+                    </div>
+                    <div class="field-group flex-1">
+                        <label for="city-district-${entryCount}">City/District</label>
+                        <input type="text" id="city-district-${entryCount}" placeholder="e.g. Akihabara, Shibuya">
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div class="field-group flex-1">
+                        <label for="notes-${entryCount}">Notes</label>
+                        <textarea id="notes-${entryCount}" placeholder="Any additional notes..."></textarea>
+                    </div>
+                </div>
+                
+                ${entryCount > 1 ? `<button class="remove-btn" onclick="removeEntry(${entryCount})">Remove Entry</button>` : ''}
+            `;
+            
+            return entryDiv;
+        }
+
+        function addEntry() {
+            const container = document.getElementById('entries-container');
+            const newEntry = createEntry();
+            container.appendChild(newEntry);
+        }
+
+        function removeEntry(id) {
+            const entry = document.getElementById(`entry-${id}`);
+            if (entry) {
+                entry.remove();
+            }
+        }
+
+        function getEntryData(id) {
+            const getValue = (fieldId) => {
+                const element = document.getElementById(fieldId);
+                return element ? element.value.trim() : '';
+            };
+
+            return {
+                enName: getValue(`en-name-${id}`),
+                nativeName: getValue(`native-name-${id}`),
+                pronunciation: getValue(`pronunciation-${id}`),
+                itemType: getValue(`item-type-${id}`),
+                franchise: getValue(`franchise-${id}`),
+                year: getValue(`year-${id}`),
+                usdPrice: getValue(`usd-price-${id}`),
+                nativePrice: getValue(`native-price-${id}`),
+                storeType: getValue(`store-type-${id}`),
+                cityDistrict: getValue(`city-district-${id}`),
+                notes: getValue(`notes-${id}`)
+            };
+        }
+
+        function generateExportData(format = 'txt') {
+            const entries = [];
+            const container = document.getElementById('entries-container');
+            const entryDivs = container.getElementsByClassName('entry');
+            
+            // Always export ALL entries, regardless of filters
+            for (let i = 0; i < entryDivs.length; i++) {
+                const entryId = entryDivs[i].id.split('-')[1];
+                const data = getEntryData(entryId);
+                
+                // Only include entries with required fields filled
+                if (data.enName && data.itemType) {
+                    entries.push(data);
+                }
+            }
+
+            if (entries.length === 0) {
+                return '';
+            }
+
+            switch (format) {
+                case 'txt':
+                    return entries.map(data => {
+                        const fields = [
+                            `English Name: "${data.enName}"`,
+                            `Native Name: "${data.nativeName}"`,
+                            `Pronunciation: "${data.pronunciation}"`,
+                            `Item Type: "${data.itemType}"`,
+                            `Franchise: "${data.franchise}"`,
+                            `Year: "${data.year}"`,
+                            `USD Price: "${data.usdPrice}"`,
+                            `Native Price: "${data.nativePrice}"`,
+                            `Store Type: "${data.storeType}"`,
+                            `City/District: "${data.cityDistrict}"`,
+                            `Notes: "${data.notes}"`
+                        ];
+                        return fields.join(', ');
+                    }).join('\n');
+
+                case 'csv':
+                    const csvHeaders = [
+                        'English Name', 'Native Name', 'Pronunciation', 'Item Type', 
+                        'Franchise', 'Year', 'USD Price', 'Native Price', 
+                        'Store Type', 'City/District', 'Notes'
+                    ];
+                    const csvRows = entries.map(data => {
+                        const row = [
+                            data.enName, data.nativeName, data.pronunciation, data.itemType,
+                            data.franchise, data.year, data.usdPrice, data.nativePrice,
+                            data.storeType, data.cityDistrict, data.notes
+                        ];
+                        return row.map(field => `"${field.replace(/"/g, '""')}"`).join(',');
+                    });
+                    return [csvHeaders.join(','), ...csvRows].join('\n');
+
+                case 'json':
+                    const jsonData = entries.map(data => ({
+                        englishName: data.enName,
+                        nativeName: data.nativeName,
+                        pronunciation: data.pronunciation,
+                        itemType: data.itemType,
+                        franchise: data.franchise,
+                        year: data.year,
+                        usdPrice: data.usdPrice,
+                        nativePrice: data.nativePrice,
+                        storeType: data.storeType,
+                        cityDistrict: data.cityDistrict,
+                        notes: data.notes
+                    }));
+                    return JSON.stringify(jsonData, null, 2);
+
+                default:
+                    return '';
+            }
+        }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('exportDropdown');
+            const arrow = document.getElementById('dropdownArrow');
+            dropdown.classList.toggle('show');
+            arrow.textContent = dropdown.classList.contains('show') ? '▲' : '▼';
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.export-dropdown-btn') && !event.target.closest('.export-dropdown-btn')) {
+                const dropdown = document.getElementById('exportDropdown');
+                const arrow = document.getElementById('dropdownArrow');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                    arrow.textContent = '▼';
+                }
+            }
+        }
+
+        function copyToClipboard() {
+            toggleDropdown(); // Close dropdown after selection
+            const exportData = generateExportData('txt');
+            if (!exportData) {
+                showNotification('No valid entries to export!', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(exportData).then(() => {
+                showNotification('Copied to clipboard!');
+            }).catch(() => {
+                showNotification('Failed to copy to clipboard', 'error');
+            });
+        }
+
+        function downloadFile(format = 'txt') {
+            toggleDropdown(); // Close dropdown after selection
+            const exportData = generateExportData(format);
+            if (!exportData) {
+                showNotification('No valid entries to export!', 'error');
+                return;
+            }
+            
+            const mimeTypes = {
+                'txt': 'text/plain',
+                'csv': 'text/csv',
+                'json': 'application/json'
+            };
+            
+            const blob = new Blob([exportData], { type: mimeTypes[format] });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `shopping-list.${format}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification(`${format.toUpperCase()} file downloaded!`);
+        }
+
+        function applyFilters() {
+            const filterType = document.getElementById('filter-item-type').value;
+            const filterYear = document.getElementById('filter-year').value;
+            const filterPriceMin = document.getElementById('filter-price-min').value;
+            const filterPriceMax = document.getElementById('filter-price-max').value;
+            
+            const entries = document.getElementsByClassName('entry');
+            
+            for (let i = 0; i < entries.length; i++) {
+                const entry = entries[i];
+                const entryId = entry.id.split('-')[1];
+                const data = getEntryData(entryId);
+                
+                let shouldShow = true;
+                
+                // Filter by item type
+                if (filterType && data.itemType !== filterType) {
+                    shouldShow = false;
+                }
+                
+                // Filter by year
+                if (filterYear && data.year !== filterYear) {
+                    shouldShow = false;
+                }
+                
+                // Filter by price range (extract numeric value from USD price)
+                if (filterPriceMin || filterPriceMax) {
+                    const priceValue = extractNumericPrice(data.usdPrice);
+                    
+                    if (filterPriceMin && (priceValue === null || priceValue < parseFloat(filterPriceMin))) {
+                        shouldShow = false;
+                    }
+                    
+                    if (filterPriceMax && (priceValue === null || priceValue > parseFloat(filterPriceMax))) {
+                        shouldShow = false;
+                    }
+                }
+                
+                // Show/hide entry
+                if (shouldShow) {
+                    entry.classList.remove('hidden');
+                } else {
+                    entry.classList.add('hidden');
+                }
+            }
+            
+            showNotification('Filters applied!');
+        }
+
+        function clearFilters() {
+            // Clear all filter inputs
+            document.getElementById('filter-item-type').value = '';
+            document.getElementById('filter-year').value = '';
+            document.getElementById('filter-price-min').value = '';
+            document.getElementById('filter-price-max').value = '';
+            
+            // Show all entries
+            const entries = document.getElementsByClassName('entry');
+            for (let i = 0; i < entries.length; i++) {
+                entries[i].classList.remove('hidden');
+            }
+            
+            showNotification('Filters cleared!');
+        }
+
+        function extractNumericPrice(priceString) {
+            if (!priceString) return null;
+            
+            // Remove currency symbols and extract numbers
+            const match = priceString.match(/[\d.]+/);
+            return match ? parseFloat(match[0]) : null;
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type === 'error' ? 'error' : ''}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize with one entry
+        document.addEventListener('DOMContentLoaded', () => {
+            addEntry();
+        });
+    </script>
+</body>
+</html>
